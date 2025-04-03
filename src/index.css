@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Estilos globales */
+body {
+    @apply font-readex text-crema bg-black;
+  }
