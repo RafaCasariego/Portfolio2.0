@@ -9,8 +9,8 @@ function App() {
   return (
     <div className="flex">
       <Sidebar />
-      <main className="w-full bg-[#121219] text-white min-h-screen lg:ml-[440px]">
-        <div className="max-w-6xl mx-auto py-12 sm:py-20 px-4 sm:px-8 space-y-20 sm:space-y-32">
+      <main className="w-full bg-[#121219] text-white min-h-screen lg:ml-[440px] overflow-x-hidden">
+        <div className="space-y-32">
           <About />
           <Projects />
           <Experience />
@@ -18,6 +18,8 @@ function App() {
           <Contact />
         </div>
       </main>
+
+
     </div>
   );
 }

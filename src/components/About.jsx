@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
 import img3 from '../assets/3.jpg';
@@ -9,12 +9,19 @@ import img7 from '../assets/7.jpg';
 
 const styles = document.createElement('style');
 styles.textContent = `
-  .carousel-slide {
-    animation: slide 90s linear infinite;
-    width: fit-content;
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
   }
 
-  .carousel-slide.paused {
+  .carousel-track {
+    display: flex;
+    width: fit-content;
+    animation: slide 210s linear infinite;
+  }
+
+  .carousel-track.paused {
     animation-play-state: paused;
   }
 
@@ -23,7 +30,7 @@ styles.textContent = `
       transform: translateX(0);
     }
     100% {
-      transform: translateX(-33.333%);
+      transform: translateX(-66.66666666666666%);
     }
   }
 `;
@@ -31,7 +38,22 @@ document.head.appendChild(styles);
 
 const About = () => {
   const [isPaused, setIsPaused] = useState(false);
-  const images = [img1, img2, img3, img4, img5, img6, img7];
+  const trackRef = useRef(null);
+  const images = [
+    img1, img2, img3, img4, img5, img6, img7,
+    img1, img2, img3, img4, img5, img6, img7,
+    img1, img2, img3, img4, img5, img6, img7
+  ];
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (track) {
+      // Forzar un reinicio de la animación al montar
+      track.style.animation = 'none';
+      track.offsetHeight; // Trigger reflow
+      track.style.animation = 'slide 210s linear infinite';
+    }
+  }, []);
 
   return (
     <section id="sobre-mi" className="relative overflow-x-hidden">
@@ -62,20 +84,22 @@ const About = () => {
         onMouseLeave={() => setIsPaused(false)}
       >
         {/* Contenedor del carrusel */}
-        <div className="relative mx-auto max-w-[1400px] overflow-hidden">
-          <div
-            className={`flex space-x-1 carousel-slide ${isPaused ? 'paused' : ''}`}
-          >
-            {/* Triplicamos las imágenes para un scroll infinito sin cortes */}
-            {[...images, ...images, ...images].map((src, index) => (
-              <img
-                key={index}
-                src={src}
-                alt={`Foto ${(index % images.length) + 1}`}
-                className="h-[350px] w-auto object-cover rounded-xl flex-none"
-                loading={index < images.length ? "eager" : "lazy"}
-              />
-            ))}
+        <div className="relative mx-auto max-w-[1400px]">
+          <div className="carousel-container">
+            <div 
+              ref={trackRef}
+              className={`carousel-track ${isPaused ? 'paused' : ''}`}
+            >
+              {images.map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`Foto ${(index % 7) + 1}`}
+                  className="h-[350px] w-auto object-cover rounded-xl flex-none mx-0.5"
+                  loading={index < 7 ? "eager" : "lazy"}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

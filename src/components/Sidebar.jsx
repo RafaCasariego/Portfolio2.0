@@ -65,7 +65,7 @@ const Sidebar = () => {
             Rafa<br />Casariego
           </h1>
           <p className="text-sm sm:text-base mt-4 text-[#cfcfcf] leading-snug">
-            Junior DevOps, con experiencia personal y muchas ganas de aprender <span>⭐</span>
+            Junior DevOps, con experiencia personal y muchas ganas de aprender
           </p>
 
           <nav className="mt-14 space-y-6 text-lg sm:text-xl font-medium">
