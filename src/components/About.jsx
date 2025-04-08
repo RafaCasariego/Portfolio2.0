@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
 import img3 from '../assets/3.jpg';
@@ -21,7 +22,7 @@ styles.textContent = `
     animation: slide 210s linear infinite;
   }
 
-  .carousel-track.paused {
+  .carousel-container:hover .carousel-track {
     animation-play-state: paused;
   }
 
@@ -37,8 +38,8 @@ styles.textContent = `
 document.head.appendChild(styles);
 
 const About = () => {
-  const [isPaused, setIsPaused] = useState(false);
   const trackRef = useRef(null);
+  const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
   const images = [
     img1, img2, img3, img4, img5, img6, img7,
     img1, img2, img3, img4, img5, img6, img7,
@@ -48,12 +49,46 @@ const About = () => {
   useEffect(() => {
     const track = trackRef.current;
     if (track) {
-      // Forzar un reinicio de la animación al montar
       track.style.animation = 'none';
       track.offsetHeight; // Trigger reflow
       track.style.animation = 'slide 210s linear infinite';
     }
   }, []);
+
+  const triggerHeartConfetti = () => {
+    if (hasTriggeredConfetti) return;
+
+    const defaults = {
+      spread: 360,
+      ticks: 100,
+      gravity: 0.5,
+      decay: 0.94,
+      startVelocity: 30,
+      shapes: ['heart'],
+      colors: ['#0066ff', '#4d9aff', '#80bdff']
+    };
+
+    confetti({
+      ...defaults,
+      particleCount: 50,
+    });
+
+    setTimeout(() => {
+      confetti({
+        ...defaults,
+        particleCount: 30,
+      });
+    }, 200);
+
+    setTimeout(() => {
+      confetti({
+        ...defaults,
+        particleCount: 20,
+      });
+    }, 400);
+
+    setHasTriggeredConfetti(true);
+  };
 
   return (
     <section id="sobre-mi" className="relative overflow-x-hidden">
@@ -78,25 +113,22 @@ const About = () => {
       </div>
 
       {/* Carrusel a ancho completo */}
-      <div 
-        className="relative w-screen left-1/2 -translate-x-1/2"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-      >
+      <div className="relative w-screen left-1/2 -translate-x-1/2">
         {/* Contenedor del carrusel */}
         <div className="relative mx-auto max-w-[1400px]">
           <div className="carousel-container">
             <div 
               ref={trackRef}
-              className={`carousel-track ${isPaused ? 'paused' : ''}`}
+              className="carousel-track"
             >
               {images.map((src, index) => (
                 <img
                   key={index}
                   src={src}
                   alt={`Foto ${(index % 7) + 1}`}
-                  className="h-[350px] w-auto object-cover rounded-xl flex-none mx-0.5"
+                  className="h-[350px] w-auto object-cover rounded-xl flex-none mx-0.5 cursor-pointer"
                   loading={index < 7 ? "eager" : "lazy"}
+                  onClick={triggerHeartConfetti}
                 />
               ))}
             </div>
