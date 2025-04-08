@@ -29,13 +29,13 @@ const Experience = () => {
     <section id="experiencia" className="min-h-screen">
       <div className="max-w-screen-lg mx-auto px-4 text-center">
         <div className="mb-16">
-          <h2 className="text-5xl font-light">
+          <h1 className="text-5xl font-light">
             Dónde he estado
             <br />
             <span className="font-bold text-6xl">
               liándola profesionalmente
             </span>
-          </h2>
+          </h1>
         </div>
         
         <div className="relative max-w-5xl mx-auto">

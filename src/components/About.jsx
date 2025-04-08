@@ -95,14 +95,14 @@ const About = () => {
       {/* Contenido principal centrado */}
       <div className="max-w-screen-md mx-auto px-4 text-center py-20">
         <div className="mb-10">
-          <h2 className="text-5xl font-light">
+          <h1 className="text-5xl font-light">
             Hola,
             <br />
             <span className="font-bold text-6xl inline-flex items-center justify-center gap-2">
               soy este de aquí
               <span className="text-2xl">👇</span>
             </span>
-          </h2>
+          </h1>
         </div>
 
         <div className="max-w-3xl mx-auto text-lg leading-relaxed text-gray-300 mb-24">

@@ -163,13 +163,13 @@ const Projects = () => {
     <section id="proyectos" className="min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="mb-16 text-center">
-          <h2 className="text-5xl font-light">
+          <h1 className="text-5xl font-light">
             Así es como
             <br />
             <span className="font-bold text-6xl">
               le meto mano al código
             </span>
-          </h2>
+          </h1>
         </div>
         
         {/* Grid de proyectos */}
