@@ -11,7 +11,7 @@ const ProjectCard = ({ project, onClick, isWide }) => {
                  hover:scale-[1.02] hover:shadow-[0_8px_30px_rgb(79,70,229,0.45)]
                  shadow-[0_4px_20px_rgb(79,70,229,0.2)]
                  hover:ring-2 hover:ring-indigo-600
-                 transition-all duration-300 ${isWide ? 'aspect-[2/1]' : 'aspect-square'}`}
+                 transition-all duration-300 aspect-[2/1] ${isWide ? 'md:aspect-[2/1]' : 'md:aspect-square'}`}
     >
       {/* Imagen de fondo */}
       <img 
