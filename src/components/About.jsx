@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import confetti from 'canvas-confetti';
 import img1 from '../assets/1.jpg';
 import img2 from '../assets/2.jpg';
 import img3 from '../assets/3.jpg';
@@ -7,35 +6,6 @@ import img4 from '../assets/4.jpg';
 import img5 from '../assets/5.jpg';
 import img6 from '../assets/6.jpg';
 import img7 from '../assets/7.jpg';
-
-const styles = document.createElement('style');
-styles.textContent = `
-  .carousel-container {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .carousel-track {
-    display: flex;
-    width: fit-content;
-    animation: slide 210s linear infinite;
-  }
-
-  .carousel-container:hover .carousel-track {
-    animation-play-state: paused;
-  }
-
-  @keyframes slide {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-66.66666666666666%);
-    }
-  }
-`;
-document.head.appendChild(styles);
 
 const About = () => {
   const trackRef = useRef(null);
@@ -47,45 +17,104 @@ const About = () => {
   ];
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (track) {
-      track.style.animation = 'none';
-      track.offsetHeight; // Trigger reflow
-      track.style.animation = 'slide 210s linear infinite';
-    }
+    // Añadir los estilos al head del documento
+    const style = document.createElement('style');
+    style.textContent = `
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .carousel-track {
+        display: flex;
+        width: fit-content;
+        animation: slide 140s linear infinite;
+      }
+
+      .carousel-container:hover .carousel-track {
+        animation-play-state: paused;
+      }
+
+      @keyframes slide {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-66.66666666666666%);
+        }
+      }
+
+      .heart-emoji {
+        position: fixed;
+        font-size: 1.5rem;
+        user-select: none;
+        pointer-events: none;
+        animation: floatHeart 1.5s ease-out forwards;
+        z-index: 1000;
+      }
+
+      @keyframes floatHeart {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(calc(-50% + var(--random-x)), calc(-300% + var(--random-y))) scale(2);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Limpiar los estilos cuando el componente se desmonte
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
 
-  const triggerHeartConfetti = () => {
+  const createHeart = (x, y, emoji) => {
+    const heart = document.createElement('div');
+    heart.className = 'heart-emoji';
+    heart.textContent = emoji;
+    heart.style.left = `${x}px`;
+    heart.style.top = `${y}px`;
+    
+    // Añadir variación aleatoria al movimiento
+    const randomX = (Math.random() - 0.5) * 300; // Aumentado de 100 a 300
+    const randomY = (Math.random() - 0.5) * 200;
+    heart.style.setProperty('--random-x', `${randomX}px`);
+    heart.style.setProperty('--random-y', `${randomY}px`);
+    
+    document.body.appendChild(heart);
+
+    heart.addEventListener('animationend', () => {
+      document.body.removeChild(heart);
+    });
+  };
+
+  const triggerHeartConfetti = (e) => {
     if (hasTriggeredConfetti) return;
 
-    const defaults = {
-      spread: 360,
-      ticks: 100,
-      gravity: 0.5,
-      decay: 0.94,
-      startVelocity: 30,
-      shapes: ['heart'],
-      colors: ['#0066ff', '#4d9aff', '#80bdff']
-    };
+    const emojis = ['💙', '🩵', '🩶', '🤍'];
+    const rect = e.target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-    confetti({
-      ...defaults,
-      particleCount: 50,
-    });
-
-    setTimeout(() => {
-      confetti({
-        ...defaults,
-        particleCount: 30,
-      });
-    }, 200);
-
-    setTimeout(() => {
-      confetti({
-        ...defaults,
-        particleCount: 20,
-      });
-    }, 400);
+    // Crear múltiples corazones en diferentes momentos y posiciones
+    for (let i = 0; i < 20; i++) { // Aumentado de 15 a 20 emojis
+      setTimeout(() => {
+        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+        // Dispersión inicial desde el punto de origen
+        const randomOffsetX = (Math.random() - 0.5) * 200; // Aumentado de 100 a 200
+        const randomOffsetY = (Math.random() - 0.5) * 100;
+        createHeart(
+          centerX + randomOffsetX, 
+          centerY + randomOffsetY, 
+          randomEmoji
+        );
+      }, i * 80); // Reducido de 100 a 80ms para que salgan más rápido
+    }
 
     setHasTriggeredConfetti(true);
   };

@@ -11,17 +11,38 @@ const Sidebar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrolledToBottom = scrollY + viewportHeight >= documentHeight - 100;
+
+      // Si estamos cerca del final de la página, activar la última sección
+      if (scrolledToBottom) {
+        setActiveSection('contacto');
+        return;
+      }
+
+      // Para otras secciones, encontrar la que esté más visible en el viewport
+      let maxVisibility = 0;
+      let mostVisibleSection = '';
 
       for (let id of sections) {
         const el = document.getElementById(id);
         if (el) {
-          const top = el.offsetTop - 100;
-          const bottom = top + el.offsetHeight;
-          if (scrollY >= top && scrollY < bottom) {
-            setActiveSection(id);
-            break;
+          const rect = el.getBoundingClientRect();
+          
+          // Calcular qué tanto del elemento está visible en el viewport
+          const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+          const visibility = visibleHeight / viewportHeight;
+
+          if (visibility > maxVisibility) {
+            maxVisibility = visibility;
+            mostVisibleSection = id;
           }
         }
+      }
+
+      if (mostVisibleSection) {
+        setActiveSection(mostVisibleSection);
       }
     };
 
